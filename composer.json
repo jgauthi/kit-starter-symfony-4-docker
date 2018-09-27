@@ -56,11 +56,5 @@
     },
     "conflict": {
         "symfony/symfony": "*"
-    },
-    "extra": {
-        "symfony": {
-            "id": "01CAD2CSWYZBBNJDXQR6BP23MR",
-            "allow-contrib": false
-        }
     }
 }
