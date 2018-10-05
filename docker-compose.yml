@@ -15,12 +15,14 @@ services:
         image: mysql:8
         container_name: ${DOCKER_APP_NAME}_mysql
         volumes:
-            - .docker/data/db:/var/lib/mysql
+          - .docker/data/db:/var/lib/mysql
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: sf4
-            MYSQL_USER: sf4
-            MYSQL_PASSWORD: sf4
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+          MYSQL_DATABASE: ${MYSQL_DATABASE}
+          MYSQL_USER: ${MYSQL_USER}
+          MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+          - 3306:3306
 
     php:
         build: .docker/php
@@ -28,7 +30,7 @@ services:
         volumes:
           - .:/var/www
         environment:
-          - maildev_host=${DOCKER_APP_NAME}_maildev.local
+          - maildev_host=sf4.mail
         depends_on:
           - maildev
           - mysql
@@ -39,10 +41,17 @@ services:
         environment:
           PMA_HOST: mysql
           PMA_PORT: 3306
+          PMA_USER: ${MYSQL_USER}
+          PMA_PASSWORD: ${MYSQL_PASSWORD}
         ports:
-            - 8080:80
+          - 8080:80
+        volumes:
+          - /sessions
+          - .docker/phpmyadmin/config.inc.php:/etc/phpmyadmin/config.user.inc.php
+        depends_on:
+          - mysql
         links:
-            - mysql
+          - mysql
 
     maildev:
         image: djfarrelly/maildev
