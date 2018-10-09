@@ -17,22 +17,24 @@ docker-compose exec php composer install
 This will initialise and start all the containers, then leave them running in the background.
 
 
-## Configuration hosts
-
-```sh
-sudo echo $(docker network inspect bridge | grep Gateway | grep -o -E '[0-9\.]+') "sf4.local" >> /etc/hosts
-sudo echo $(docker inspect sf41_phpmyadmin | grep \"IPAddress\" | grep -o -E '[0-9\.]+') "sf4.pma" >> /etc/hosts
-sudo echo $(docker inspect sf41_maildev | grep \"IPAddress\" | grep -o -E '[0-9\.]+') "sf4.mail" >> /etc/hosts
-```
 
 ## URL app
 
-| **Application**   | **Url**          |
-| ----------------- | ---------------- |
-| Symfony           | http://sf4.local |
-| phpMyAdmin        | http://sf4.pma   |
-| Mail SMTP capture | http://sf4.mail  |
+| **Application**   | **Url with traefik**  |
+| ----------------- | --------------------- |
+| Symfony           | http://sf4.docker     |
+| phpMyAdmin        | http://pma.docker     |
+| Mail SMTP capture | http://maildev.docker |
 
+Note: With Traefik, you must edit your dnsmasq with domain "*.docker".
+
+Example:
+
+```sh
+sudo gedit /etc/dnsmasq.d/dev.conf
+# add "address=/docker/127.0.0.1"
+sudo service dnsmasq restart
+```
 
 ## Configure Symfony
 
