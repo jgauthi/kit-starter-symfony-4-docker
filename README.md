@@ -34,6 +34,39 @@ sudo echo $(docker inspect sf41_maildev | grep \"IPAddress\" | grep -o -E '[0-9\
 | Mail SMTP capture | http://sf4.mail  |
 
 
+## Configure Symfony
+
+### SMTP
+Add on configuration file:
+
+* `mailer_transport`: smtp
+* `mailer_host`: maildev
+* `mailer_port`: 25
+* `mailer_user`: _no value_
+* `mailer_password`: _no value_
+
+
+On Symfony 3, edit file: "app/config/config.yml"
+
+```yml
+# Swiftmailer Configuration
+swiftmailer:
+    transport: '%mailer_transport%'
+    host: 'VALUE'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    spool: { type: memory }
+    auth_mode: cram-md5
+    port: '%mailer_port%'
+```
+
+On Symfony 4, edit file: "config/packages/swiftmailer.yaml" and complete "MAILER_URL" var ([documentation](https://symfony.com/doc/current/email.html)).
+
+```yml
+MAILER_URL=smtp://localhost:25?encryption=ssl&auth_mode=login&username=&password=
+```
+
+
 
 # Docker compose cheatsheet
 **Note:** you need to cd first to where your docker-compose.yml file lives.

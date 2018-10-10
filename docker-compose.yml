@@ -58,3 +58,4 @@ services:
         container_name: ${DOCKER_APP_NAME}_maildev
         ports:
           - 8001:80
+          - 1025:25
